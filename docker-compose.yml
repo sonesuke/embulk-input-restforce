@@ -1,0 +1,14 @@
+version: '3'
+services:
+  dev:
+    build:
+      context: ./docker
+    environment:
+      SALESFORCE_USER_NAME: ${SALESFORCE_USER_NAME}
+      SALESFORCE_PASSWORD: ${SALESFORCE_PASSWORD}
+      SALESFORCE_SECURITY_TOKEN: ${SALESFORCE_SECURITY_TOKEN}
+      SALESFORCE_CLIENT_ID: ${SALESFORCE_CLIENT_ID}
+      SALESFORCE_CLIENT_SECRET: ${SALESFORCE_CLIENT_SECRET}
+    volumes:
+      - ./:/embulk-input-restforce
+    working_dir: /embulk-input-restforce

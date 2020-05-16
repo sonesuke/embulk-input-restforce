@@ -41,11 +41,20 @@ module Embulk
         wrapper = ObjectWrapper.new task["user_name"], task["password"], task["security_token"], task["client_id"], task["client_secret"]
         fields = wrapper.get_profile(task["sobject"], Embulk.logger)
         if not task["skip_columns"].nil? then
-          task["skip_columns"].each do |skip_column|
-            fields = fields.select { |field| not /#{skip_column["pattern"]}/.match(field[:name]) }
-          end
+          fields = filter_fields(fields, task["sobject"], task["skip_columns"])
         end
-        return fields.map.with_index { |field, i| Column.new(i, field[:name], field[:type]) }
+        fields.map.with_index { |field, i| Column.new(i, field[:name], field[:type]) }
+      end
+
+      def self.filter_fields(fields, object, skip_columns)
+        skip_columns.each do | skip_column |
+          if skip_column.has_key?("ignore") and skip_column["ignore"].count(object) then
+            Embulk.logger.info "pattern '#{skip_column["pattern"]}' is ignored."
+            next
+          end
+          fields = fields.select {|field| not /^#{skip_column["pattern"]}$/.match(field[:name])}
+        end
+        fields
       end
 
       # TODO

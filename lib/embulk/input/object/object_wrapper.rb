@@ -35,7 +35,7 @@ class ObjectWrapper
       query += " WHERE SystemModstamp >= #{search_criteria[:updated_after]}"
     end
     logger.info "query: #{query}"
-    return @client.query_all(query)
+    @client.query_all(query)
   end
 
   def get_profile(sobject, logger)
@@ -46,9 +46,9 @@ class ObjectWrapper
       end
     end
 
-    return descrption["fields"]
-               .select { |field| @type_map.has_key? field.type }
-               .map { |field| {:name => field.name, :type => @type_map[field.type]} }
+    descrption["fields"]
+        .select { |field| @type_map.has_key? field.type }
+        .map { |field| {:name => field.name, :type => @type_map[field.type]} }
   end
 end
 

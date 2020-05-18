@@ -7,7 +7,6 @@ in:
   client_secret : {{ env.SALESFORCE_CLIENT_SECRET }}
   sobject: Lead
   skip_columns:
-    - {pattern: .*Name}
-    - {pattern: Email, ignore: [Lead, Contact]}
+    - {pattern: Name, ignore: [Lead]}
 out:
   type: stdout

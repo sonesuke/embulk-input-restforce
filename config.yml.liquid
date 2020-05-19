@@ -8,5 +8,8 @@ in:
   sobject: Lead
   skip_columns:
     - {pattern: Name, ignore: [Lead]}
+  hashed_columns:
+    - {pattern: LastName, ignore: [Lead]}
+    - {pattern: FirstName}
 out:
   type: stdout

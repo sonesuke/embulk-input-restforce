@@ -1,4 +1,5 @@
 require 'time'
+require 'digest'
 require_relative 'object/object_wrapper'
 
 module Embulk
@@ -18,6 +19,7 @@ module Embulk
             "sobject" => config.param("sobject", :string), # string, required
             "from_date" => config.param("from_date", :string, default: nil),
             "skip_columns" => config.param("skip_columns", :array, default: []),
+            "hashed_columns" => config.param("hashed_columns", :array, default: []),
             "columns" => config.param("columns", :array, default: []),
         }
         columns = task["columns"].size > 0 ? create_from_config(task) : create_from_profile(task)
@@ -71,6 +73,7 @@ module Embulk
         # initialization code:
         @user_name = task["user_name"]
         @password = task["password"]
+        @hashed_columns = task["hashed_columns"]
         @user_key = task["user_key"]
       end
 
@@ -82,7 +85,7 @@ module Embulk
         rows = wrapper.query(task["sobject"], fields, search_criteria, Embulk.logger)
 
         rows.each do |row|
-          result = schema.map { |column| evaluate_column(column, row) }
+          result = schema.map { |column| evaluate_column(column, row, @hashed_columns, task["sobject"]) }
           page_builder.add(result)
         end
         page_builder.finish
@@ -91,7 +94,7 @@ module Embulk
         return task_report
       end
 
-      def evaluate_column(column, row)
+      def evaluate_column(column, row, hashed_columns, sobject)
         if not row.has_key?(column.name) or row[column.name].nil? then
           return nil
         end
@@ -104,6 +107,14 @@ module Embulk
           when :timestamp then
             return value.size > 10 ? Time.strptime(value, "%Y-%m-%dT%H:%M:%S.%L%z").to_i : Time.strptime(value, "%Y-%m-%d").to_i
           else
+            hashed_columns.each do | hashed_column |
+              if hashed_column.has_key?("ignore") and hashed_column["ignore"].count(sobject) > 0 then
+                next
+              end
+              if /^#{hashed_column["pattern"]}$/.match(column.name) then
+                return Digest::MD5.hexdigest(value)
+              end
+            end
             return value
           end
         rescue

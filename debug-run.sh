@@ -1,1 +1,1 @@
-embulk run -L /embulk-input-restforce config.yml.liquid -c confing.diff.yml
+embulk run -L /embulk-input-restforce config.yml.liquid

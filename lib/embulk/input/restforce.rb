@@ -103,7 +103,7 @@ module Embulk
           value = row[column.name]
           case column.type
           when :boolean then
-            return value == "true"
+            return value
           when :timestamp then
             return value.size > 10 ? Time.strptime(value, "%Y-%m-%dT%H:%M:%S.%L%z").to_i : Time.strptime(value, "%Y-%m-%d").to_i
           else

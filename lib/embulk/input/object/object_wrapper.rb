@@ -26,6 +26,7 @@ class ObjectWrapper
         "email" => :string,
         "anyType" => :string,
         "percent" => :double,
+        "multipicklist" => :string
     }
   end
 

@@ -22,6 +22,7 @@ class ObjectWrapper
         "int" => :long,
         "datetime" => :timestamp,
         "date" => :timestamp,
+        "time" => :string,
         "currency" => :double,
         "email" => :string,
         "anyType" => :string,

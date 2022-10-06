@@ -5,6 +5,7 @@ in:
   security_token: {{ env.SALESFORCE_SECURITY_TOKEN }}
   client_id : {{ env.SALESFORCE_CLIENT_ID }}
   client_secret : {{ env.SALESFORCE_CLIENT_SECRET }}
+  api : 54.0
   sobject: Lead
   skip_columns:
     - {pattern: Name, ignore: [Lead]}

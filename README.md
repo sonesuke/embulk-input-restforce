@@ -17,6 +17,7 @@ TODO: Write short description here and embulk-input-restforce.gemspec file.
 - **client_id**: Salesforce's client id (string, required)
 - **client_secret**: Salesforce's c;oem tsecret (string, required)
 - **sobject**: SObject what you want to fetch.(string, required)
+- **api**: Salesforce's API version (string)
 - **skip_columns**: Columns what you want to skip. Please see the following section for the detail. (Array)
 - **columns**: Columns what you want to select. If nothing, the default is all columns.(Array)  
 
@@ -49,6 +50,7 @@ in:
   client_id: <your client id>
   client_secret: <your client secret>
   sobject: Contact
+  api: 54.0
   skip_columns:
     - {pattern: .*Name}
     - {pattern: Email}

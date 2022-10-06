@@ -17,6 +17,7 @@ module Embulk
             "client_id" => config.param("client_id", :string), # string, required
             "client_secret" => config.param("client_secret", :string), # string, required
             "sobject" => config.param("sobject", :string), # string, required
+            "api" => config.param("api", :string, default: "45.0"),
             "from_date" => config.param("from_date", :string, default: nil),
             "skip_columns" => config.param("skip_columns", :array, default: []),
             "hashed_columns" => config.param("hashed_columns", :array, default: []),
@@ -40,7 +41,7 @@ module Embulk
 
       def self.create_from_profile(task)
         Embulk.logger.info "Query profile"
-        wrapper = ObjectWrapper.new task["user_name"], task["password"], task["security_token"], task["client_id"], task["client_secret"]
+        wrapper = ObjectWrapper.new task["user_name"], task["password"], task["security_token"], task["client_id"], task["client_secret"], task["api"]
         fields = wrapper.get_profile(task["sobject"], Embulk.logger)
         if not task["skip_columns"].nil? then
           fields = filter_fields(fields, task["sobject"], task["skip_columns"])
@@ -78,7 +79,7 @@ module Embulk
       end
 
       def run
-        wrapper = ObjectWrapper.new task["user_name"], task["password"], task["security_token"], task["client_id"], task["client_secret"]
+        wrapper = ObjectWrapper.new task["user_name"], task["password"], task["security_token"], task["client_id"], task["client_secret"], task["api"]
         execution_at = Time.now
         search_criteria = task["from_date"].nil? ? {} : {:updated_after => Time.parse(task["from_date"]).strftime("%Y-%m-%dT%H:%M:%S%:z")}
         fields = schema.map {|column| column.name }

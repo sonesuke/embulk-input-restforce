@@ -2,13 +2,13 @@ require 'restforce'
 
 class ObjectWrapper
 
-  def initialize(user_name, password, security_token, client_id, client_secret)
+  def initialize(user_name, password, security_token, client_id, client_secret, api)
     @client = Restforce.new(username: user_name,
                             password: password,
                             security_token: security_token,
                             client_id: client_id,
                             client_secret: client_secret,
-                            api_version: '45.0')
+                            api_version: api)
     @type_map = {
         "id" => :string,
         "boolean" => :boolean,
@@ -27,7 +27,8 @@ class ObjectWrapper
         "email" => :string,
         "anyType" => :string,
         "percent" => :double,
-        "multipicklist" => :string
+        "multipicklist" => :string,
+        "combobox" => :string
     }
   end
 
